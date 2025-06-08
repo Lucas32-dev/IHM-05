@@ -142,9 +142,9 @@ function createCards() {
     let card = document.createElement("div");
     card.classList.add("card");
     card.innerHTML = `
-    <div class="lg:flex">
+    <div class="lg:flex w-full">
       <img src="${event.image}" alt="${event.title}">
-      <div class="info flex flex-col justify-center">
+      <div class="info flex flex-col justify-center items-center">
           <h3>${event.title}</h3>
           <p>${event.description}</p>
           <p>
