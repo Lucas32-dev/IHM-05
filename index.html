@@ -8,15 +8,15 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="static/css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="static/js/index.js" defer></script>
   </head>
   <body>
     <header>
-      <button onclick="toggleMenu()">
+      <button id="toggleBtn" class="cursor-pointer">
         <span class="material-icons" style="font-size: 32px"> menu </span>
       </button>
-
       <span class="title">
         <svg
           class="svg_logo_inatel"
@@ -30,20 +30,62 @@
           ></path>
         </svg>
       </span>
-      <span class="material-icons" style="font-size: 32px">
-        notifications
-      </span>
+      <div class="relative">
+        <button
+          id="notificationBtn"
+          aria-label="Show notifications"
+          class="relative focus:outline-none cursor-pointer"
+        >
+          <span class="material-icons text-3xl">notifications</span>
+          <!-- Red dot for unread -->
+          <span
+            id="notifDot"
+            class="absolute top-0 right-0 block h-3 w-3 rounded-full bg-red-500 animate-pulse"
+          ></span>
+        </button>
+
+        <!-- Notification dropdown menu (hidden by default) -->
+        <div
+          id="notifMenu"
+          class="absolute hidden p-2 pb-4 left-[-175px] sm:left-[-350px] sm:w-fit z-50 rounded shadow-md border border-gray-200"
+          style="background-color: var(--bg)"
+        >
+          <!-- Left side: Next tests -->
+          <div class="flex flex-col sm:flex-row gap-1">
+            <div
+              class="overflow-y-auto scrollbar-thin max-h-[400px] sm:max-h-[1000px] px-1"
+            >
+              <h3 class="text-sm font-semibold pb-1">Provas</h3>
+              <ul id="testsList" class="flex flex-col gap-1"></ul>
+            </div>
+            <div
+              class="w-px bg-gray-300 min-h-full self-stretch hidden sm:block"
+            ></div>
+            <div
+              class="h-px bg-gray-300 min-w-full self-stretch sm:hidden"
+            ></div>
+            <div
+              class="overflow-y-auto scrollbar-thin max-h-[400px] sm:max-h-[1000px] px-1"
+            >
+              <h3 class="text-sm font-semibold pb-1">Vagas</h3>
+              <ul id="jobsList" class="flex flex-col gap-1"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
     <main>
-      <div class="messages">
-        <h1>Olá Lucas</h1>
-        <div class="message">
-          <span class="material-icons" style="color: red"> priority_high </span>
-          <span> Você possui pendencias na boblioteca </span>
-        </div>
-        <div class="message">
-          <span class="material-icons" style="color: red"> priority_high </span>
-          <span> Você possui pendencias na tesouraria </span>
+      <div class="messages px-[18px]">
+        <h1 class="p-1 font-semibold">Olá Lucas!</h1>
+        <div class="border border-dashed w-fit p-3 rounded-md border-gray-600">
+          <div class="message flex items-center">
+            <span class="material-icons text-red-800"> priority_high </span>
+            <span class="text-sm"> Você possui pendencias na boblioteca </span>
+          </div>
+          <div class="message flex items-center">
+            <span class="material-icons text-red-800"> priority_high </span>
+            <span class="text-sm"> Você possui pendencias na tesouraria </span>
+          </div>
         </div>
       </div>
       <aulas-component id="componente">
@@ -55,18 +97,191 @@
         <button id="nextBtn">❯</button>
       </div>
     </main>
-    <div class="menu" id="menu" style="display: none">
-      <h1>Escolha o tema</h1>
 
-      <button onclick="setTheme('light');toggleMenu()">
-        <h3 class="menu-item">Light</h3>
-      </button>
-      <button onclick="setTheme('dark');toggleMenu()">
-        <h3 class="menu-item">Dark</h3>
-      </button>
-      <button onclick="setTheme('solarized');toggleMenu()">
-        <h3 class="menu-item">Solarized</h3>
-      </button>
-    </div>
+    <!-- Sidebar -->
+    <aside
+      id="sidebar"
+      style="background-color: var(--bg)"
+      class="fixed top-0 left-0 p-4 h-full w-64 shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out z-40 flex flex-col"
+    >
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-lg font-semibold">Configurações</h2>
+        <button
+          id="closeBtn"
+          type="button"
+          class="h-fit flex items-center cursor-pointer"
+          aria-label="Close sidebar"
+        >
+          <span
+            class="material-icons text-gray-500 hover:bg-black/10 rounded-md p-1"
+          >
+            close
+          </span>
+        </button>
+      </div>
+
+      <div class="theme-changer flex flex-col gap-3">
+        <h3 class="text-xs font-medium mb-2">Escolha o tema</h3>
+        <button
+          onclick="setTheme('light'); sidebar.classList.add('-translate-x-full')"
+          class="p-2 rounded-md text-sm hover:bg-gray-200 transition border border-gray-500 flex items-center gap-2"
+          aria-label="Set light theme"
+        >
+          ☀️ Claro
+        </button>
+        <button
+          onclick="setTheme('dark'); sidebar.classList.add('-translate-x-full')"
+          class="p-2 rounded-md text-sm hover:bg-gray-700 hover:text-white transition border border-gray-500 flex items-center gap-2"
+          aria-label="Set dark theme"
+        >
+          🌙 Escuro
+        </button>
+        <button
+          onclick="setTheme('solarized'); sidebar.classList.add('-translate-x-full')"
+          class="p-2 rounded-md text-sm hover:bg-yellow-300 transition border border-gray-500 flex items-center gap-2"
+          aria-label="Set solarized theme"
+        >
+          🌞 Ensolarado
+        </button>
+      </div>
+    </aside>
+
+    <script>
+      const nextTests = [
+        {
+          subject: "Matemática",
+          date: "2025-06-15T09:00:00",
+          location: "Sala 101",
+        },
+        {
+          subject: "Física",
+          date: "2025-06-20T14:00:00",
+          location: "Sala 204",
+        },
+        {
+          subject: "Cálculo I",
+          date: "2025-06-25T11:30:00",
+          location: "Sala 302",
+        },
+      ];
+
+      const newJobs = [
+        {
+          title: "Estagiário",
+          company: "TechCorp",
+          companyColor: "#3b82f6",
+          salary: 1500,
+          location: "Remoto",
+        },
+        {
+          title: "Desenvolvedor Backend",
+          company: "BrightAds",
+          companyColor: "#f97316",
+          salary: 1200,
+          location: "Nova York",
+        },
+        {
+          title: "Técnico de Laboratório",
+          company: "BioLabs",
+          companyColor: "#22c55e",
+          salary: 1000,
+          location: "São Francisco",
+        },
+      ];
+
+      function formatDate(dateString) {
+        const options = {
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        };
+        return new Date(dateString).toLocaleString("en-US", options);
+      }
+
+      function renderTests() {
+        const testsList = document.getElementById("testsList");
+        testsList.innerHTML = "";
+
+        nextTests.forEach((test) => {
+          const li = document.createElement("li");
+          li.classList = "border-t pt-1 border-gray-300";
+
+          li.innerHTML = `
+            <div class="flex justify-between items-center gap-1">
+              <p class="text-base font-semibold">${test.subject}</p>
+              <p class="text-sm">${formatDate(test.date)}</p>
+            </div>
+            <p class="mt-1 text-sm bg-blue-800/80 px-2 py-[2px] !text-white w-fit rounded-md">Location: ${
+              test.location
+            }</p>
+          `;
+
+          testsList.appendChild(li);
+        });
+      }
+
+      function renderJobs() {
+        const jobsList = document.getElementById("jobsList");
+        jobsList.innerHTML = "";
+
+        newJobs.forEach((job) => {
+          const li = document.createElement("li");
+          li.className = "border-t pt-1 border-gray-300";
+
+          li.innerHTML = `
+            <div class="flex justify-between items-center mb-1 gap-1">
+              <p class="text-base font-semibold">${job.title}</p>
+              <p class="text-sm !text-green-600 font-semibold">$${job.salary.toLocaleString()}</p>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap !text-sm">
+              <p
+                class="px-2 py-0.5 rounded-full !text-white font-medium"
+                style="background-color: ${job.companyColor};"
+                >${job.company}</p
+              >
+              <p>• ${job.location}</p>
+            </div>
+          `;
+
+          jobsList.appendChild(li);
+        });
+      }
+
+      const notificationBtn = document.getElementById("notificationBtn");
+      const notifMenu = document.getElementById("notifMenu");
+      const notifDot = document.getElementById("notifDot");
+
+      notificationBtn.addEventListener("click", () => {
+        notifMenu.classList.toggle("hidden");
+        if (!notifMenu.classList.contains("hidden")) {
+          notifDot.style.display = "none";
+        }
+      });
+
+      document.addEventListener("click", (e) => {
+        if (
+          !notificationBtn.contains(e.target) &&
+          !notifMenu.contains(e.target)
+        ) {
+          notifMenu.classList.add("hidden");
+        }
+      });
+
+      renderTests();
+      renderJobs();
+
+      const toggleBtn = document.getElementById("toggleBtn");
+      const closeBtn = document.getElementById("closeBtn");
+      const sidebar = document.getElementById("sidebar");
+
+      toggleBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("-translate-x-full");
+      });
+
+      closeBtn.addEventListener("click", () => {
+        sidebar.classList.add("-translate-x-full");
+      });
+    </script>
   </body>
 </html>

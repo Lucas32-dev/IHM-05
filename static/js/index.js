@@ -142,8 +142,9 @@ function createCards() {
     let card = document.createElement("div");
     card.classList.add("card");
     card.innerHTML = `
+    <div class="lg:flex">
       <img src="${event.image}" alt="${event.title}">
-      <div class="info">
+      <div class="info flex flex-col justify-center">
           <h3>${event.title}</h3>
           <p>${event.description}</p>
           <p>
@@ -151,6 +152,8 @@ function createCards() {
             <span class="material-icons icon">pin_drop</span> ${event.location}
           </p>
       </div>
+    </div>
+      
     `;
     carousel.appendChild(card);
   });
